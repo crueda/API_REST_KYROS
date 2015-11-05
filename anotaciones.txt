@@ -1,0 +1,58 @@
+basado en:
+http://uno-de-piera.com/servicio-rest-con-nodejs-express-4-y-mysql/
+
+API DOC
+-------
+apidoc -i routes/ -o /Applications/MAMP/htdocs/dockyrosapi/
+rsync -r /Applications/MAMP/htdocs/dockyrosapi/* root@192.168.24.31:/var/www/dockyrosapi
+
+Acceso web :
+http://sumo.kyroslbs.com:3000/dockyrosapi/
+
+
+----------------------
+MOVER CODIGO:
+rsync -r /Users/Carlos/Workspace/SUMO/API_REST/* root@192.168.24.34:/opt/API_REST
+
+
+
+----------------------
+
+apidoc -i routes/ -o /Users/Carlos/Workspace/SUMO/API_REST_nodejs/apidoc
+apidoc -i routes/ -o /Applications/MAMP/htdocs/dockyrosapi/
+apidoc -i routes/ -o apidoc/
+apidoc -i routes/ -o apidoc/ -t mytemplate/
+
+
+---
+Cabeceras autenticacion
+x-access-token
+x-key
+
+---
+
+TOKEN
+Ahi va un token con una validez de 1000 días:
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjY5ODI1MDA1ODksImlzcyI6InN1bW8iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciJ9.CnX6I1puC-H-0AluXge8X4vVlUOfv8x-Nh6VwzxO-n8
+
+---
+generador sha256:
+http://www.xorbin.com/tools/sha256-hash-calculator
+
+password "sumo":
+ef4095ba96e4950581a6cc5f9de4092a20901a2cfaf9d2a3b02891afceae6e34
+
+password "01sumo10":
+d2c49388eb1e9072aca5c45b580eae3fc04ac86d57304769f14be53783e13a96
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0Mzk1MzQ2NTExMjcsImlzcyI6InN1bW8iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciJ9.ibplqJKyk9l5j1I99K2s5zm6pbU62aLy4hzKgeHIGFw
+
+--peticiones
+curl -X POST -H "X-Access-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0Mzk1MzQ2NTExMjcsImlzcyI6InN1bW8iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciJ9.ibplqJKyk9l5j1I99K2s5zm6pbU62aLy4hzKgeHIGFw" http://192.168.3.34:3003/kyrosapi/Status
+
+---test:
+mocha
+
+--- para el reporter
+mocha --reporter mocha-html-reporter > body.html
+cat node_modules/mocha-html-reporter/docs/head.html ./body.html node_modules/mocha-html-reporter/docs/tail.html > /Applications/MAMP/htdocs/dockyrosapi/test/test.html
