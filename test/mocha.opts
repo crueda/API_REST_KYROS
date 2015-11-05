@@ -1,4 +1,4 @@
-./test/test_vehicle.js
+./test/test_poi.js
 
 --reporter spec
 --growl

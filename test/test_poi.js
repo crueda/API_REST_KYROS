@@ -3,9 +3,9 @@ var assert = require('assert');
 var request = require('supertest');
 var winston = require('winston');
 
-var uxoInserted = 0;
+var POIInserted = 0;
 
-describe('UXO', function() {
+describe('POI', function() {
   var url = 'http://localhost:3000';
   before(function(done) {
     done();
@@ -13,12 +13,12 @@ describe('UXO', function() {
 
   describe('API REST test', function()
 	{
-    it('[POST]    Get all UXOs', function(done) {
+    it('[POST]    Get all POIs', function(done) {
       //this.timeout(500);
       //setTimeout(done, 300);
 
     request(url)
-	  .post('/kyrosapi/uxos')
+	  .post('/kyrosapi/POIs')
 
     // end handles the response
 	  .end(function(err, res) {
@@ -30,16 +30,17 @@ describe('UXO', function() {
         });
     });
 
-	it('[POST]    Add UXO', function(done) {
+	it('[POST]    Add POI', function(done) {
     var body = {
-      description: 'uxo description',
-      weight: 99,
+      description: 'POI description',
       latitude: 40.3,
       longitude: -2.1,
-      height: -50
+      name: 'test',
+      description: 'test',
+      categoryId: '0'
   	};
 	request(url)
-	.post('/kyrosapi/uxo')
+	.post('/kyrosapi/POI')
 	.send(body)
 	// end handles the response
 	.end(function(err, res) {
@@ -47,15 +48,15 @@ describe('UXO', function() {
 					throw err;
 				}
         //console.log(res);
-        uxoInserted = res.body.response.data.record[0].id;
+        POIInserted = res.body.response.data.record[0].id;
 				res.status.should.be.equal(201);
 				done();
 			});
 	});
 
-  it('[GET]    Get UXO', function(done) {
+  it('[GET]    Get POI', function(done) {
   request(url)
-  .get('/kyrosapi/uxo/'+uxoInserted)
+  .get('/kyrosapi/POI/'+POIInserted)
   // end handles the response
   .end(function(err, res) {
         if (err) {
@@ -67,17 +68,17 @@ describe('UXO', function() {
   });
 
 
-  it('[PUT]     Update UXO', function(done){
+  it('[PUT]     Update POI', function(done){
   var body = {
-  id: uxoInserted,
-  description: 'new description',
-  weight: '10',
+  id: POIInserted,
   latitude: '41.3',
   longitude: '-3.1',
-  height: '-50'
+  name: 'test',
+  description: 'test',
+  categoryId: '0'
   };
   request(url)
-  .put('/kyrosapi/uxo')
+  .put('/kyrosapi/POI')
   .send(body)
   .expect('Content-Type', /json/)
   .expect(200) //Status code
@@ -90,12 +91,12 @@ describe('UXO', function() {
   });
   });
 
-  it('[DELETE]  Remove UXO', function(done) {
+  it('[DELETE]  Remove POI', function(done) {
     var body = {
-      id: uxoInserted
+      id: POIInserted
   	};
 	request(url)
-	.delete('/kyrosapi/uxo')
+	.delete('/kyrosapi/POI')
 	.send(body)
 	// end handles the response
 	.end(function(err, res) {

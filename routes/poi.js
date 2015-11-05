@@ -2,7 +2,7 @@ var status = require("../utils/statusCodes.js");
 var messages = require("../utils/statusMessages.js");
 var express = require('express');
 var router = express.Router();
-var UxoModel = require('../models/poi');
+var PoiModel = require('../models/poi');
 
 // Fichero de propiedades
 var PropertiesReader = require('properties-reader');
@@ -132,20 +132,20 @@ var log = require('tracer').console({
 *     }
 */
 
-/* POST. Obtenemos y mostramos todos los UXO */
+/* POST. Obtenemos y mostramos todos los Poi */
 /**
- * @api {post} /kyrosapi/uxos Request all UXOs
- * @apiName GetUxos
- * @apiGroup UXO
+ * @api {post} /kyrosapi/Pois Request all Pois
+ * @apiName GetPois
+ * @apiGroup Poi
  * @apiVersion 1.0.1
- * @apiDescription List of UXOs
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/uxos
+ * @apiDescription List of Pois
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/Pois
  *
  * @apiParam {Number} [startRow] Number of first element
  * @apiParam {Number} [endRow] Number of last element
- * @apiParam {String="id","description","weight","latitude","longitude","height"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
+ * @apiParam {String="id","description","name","latitude","longitude","categotyId"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
  *
- * @apiSuccess {Object[]} uxo       List of UXOs
+ * @apiSuccess {Object[]} Poi       List of Pois
  * @apiSuccessExample Success-Response:
  *     https/1.1 200 OK
  *     {
@@ -160,18 +160,18 @@ var log = require('tracer').console({
  *           {
  *              "id": 123,
  *              "description": "Explosivo militar",
- *              "weight": 200,
+ *              "name": "exp01",
  *              "latitude": 40.121323,
  *              "longitude": "1.4667878",
- *              "height": "-40"
+ *              "categoryId": "1"
  *           },
  *           {
  *              "id": 124,
  *              "description": "Explosivo militar",
- *              "weight": 10,
+ *              "name": "exp02",
  *              "latitude": 39.121323,
  *              "longitude": "4.4667878",
- *              "height": "-10"
+ *              "height": "1"
  *           }]
  *        }
  *       }
@@ -183,9 +183,9 @@ var log = require('tracer').console({
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  */
-router.post('/uxos/', function(req, res)
+router.post('/Pois/', function(req, res)
 {
-    log.info("POST: /uxos");
+    log.info("POST: /Pois");
 
     var startRow = req.body.startRow || req.params.startRow || req.query.startRow;
     var endRow = req.body.endRow || req.params.endRow || req.query.endRow;
@@ -195,7 +195,7 @@ router.post('/uxos/', function(req, res)
       sortBy = sortBy.replace(/\s/g, "");
     }
 
-    UxoModel.getUxos(startRow, endRow, sortBy, function(error, data, totalRows)
+    PoiModel.getPois(startRow, endRow, sortBy, function(error, data, totalRows)
     {
         if (data == null)
         {
@@ -217,23 +217,23 @@ router.post('/uxos/', function(req, res)
     });
 });
 
-/* GET. Se obtiene un UXO por su id */
+/* GET. Se obtiene un Poi por su id */
 /**
- * @api {get} /kyrosapi/uxo/:id Request UXO information
- * @apiName GetUxo Request uxo information
- * @apiGroup UXO
+ * @api {get} /kyrosapi/Poi/:id Request Poi information
+ * @apiName GetPoi Request Poi information
+ * @apiGroup Poi
  * @apiVersion 1.0.1
- * @apiDescription UXO information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/uxo
+ * @apiDescription Poi information
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/Poi
  *
- * @apiParam {Number} id UXO unique ID
+ * @apiParam {Number} id Poi unique ID
  *
- * @apiSuccess {Number} id UXO unique ID
- * @apiSuccess {String} description Description of UXO
- * @apiSuccess {Number} weight Weight of UXO
- * @apiSuccess {Number} longitude Longitude of the UXO (WGS84)
- * @apiSuccess {Number} latitude Latitude of the UXO (WGS84)
- * @apiSuccess {Number} height Depth under sea (meters)
+ * @apiSuccess {Number} id Poi unique ID
+ * @apiSuccess {String} description Description of Poi
+ * @apiSuccess {String} name Name of Poi
+ * @apiSuccess {Number} longitude Longitude of the Poi (WGS84)
+ * @apiSuccess {Number} latitude Latitude of the Poi (WGS84)
+ * @apiSuccess {Number} categoryId Category of POI
  *
  * @apiSuccessExample Success-Response:
  *     https/1.1 200 OK
@@ -258,7 +258,7 @@ router.post('/uxos/', function(req, res)
  *       }
  *     }
  *
- * @apiError UxoNotFound The <code>id</code> of the uxo was not found.
+ * @apiError PoiNotFound The <code>id</code> of the Poi was not found.
  *
  * @apiUse TokenHeader
  * @apiUse LoginError
@@ -267,15 +267,15 @@ router.post('/uxos/', function(req, res)
  * @apiUse MissingRegisterError
  * @apiUse IdNumericError
  */
-router.get('/uxo/:id', function(req, res)
+router.get('/Poi/:id', function(req, res)
 {
     var id = req.params.id;
-    log.info("GET: /uxo/"+id);
+    log.info("GET: /Poi/"+id);
 
     //se comprueba que la id es un número
     if(!isNaN(id))
     {
-        UxoModel.getUxo(id,function(error, data)
+        PoiModel.getPoi(id,function(error, data)
         {
           if (data == null)
           {
@@ -303,21 +303,21 @@ router.get('/uxo/:id', function(req, res)
     }
 });
 
-/* PUT. Actualizar un UXO existente */
+/* PUT. Actualizar un Poi existente */
 /**
- * @api {put} /kyrosapi/uxo/ Update UXO
- * @apiName PutNewUxo
- * @apiGroup UXO
+ * @api {put} /kyrosapi/Poi/ Update Poi
+ * @apiName PutNewPoi
+ * @apiGroup Poi
  * @apiVersion 1.0.1
- * @apiDescription Update UXO
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/uxo
+ * @apiDescription Update Poi
+ * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/Poi
  *
- * @apiParam {Number} id UXO unique ID
- * @apiParam {String} description Description of UXO
- * @apiParam {Number} weight Weight of UXO
- * @apiParam {Number} longitude Longitude of the UXO (WGS84)
- * @apiParam {Number} latitude Latitude of the UXI (WGS84)
- * @apiParam {Number} [height=0] Depth under sea (meters)
+ * @apiParam {Number} id Poi unique ID
+ * @apiParam {String} description Description of Poi
+ * @apiParam {String} name Name of Poi
+ * @apiParam {Number} longitude Longitude of the Poi (WGS84)
+ * @apiParam {Number} latitude Latitude of the Poi (WGS84)
+ * @apiParam {Number} categoryId Category of Poi
  *
  * @apiSuccess {json} message Result message
  * @apiSuccessExample Success-Response:
@@ -331,57 +331,53 @@ router.get('/uxo/:id', function(req, res)
  *           {
  *              "id": 123,
  *              "description": "Explosivo militar",
- *              "weight": 200,
+ *              "name": "exp01",
  *              "latitude": 40.121323,
  *              "longitude": "1.4667878",
- *              "height": "40"
+ *              "categoryId": "1"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
  */
-router.put('/uxo', function(req, res)
+router.put('/Poi', function(req, res)
 {
-    log.info("PUT: /uxo");
+    log.info("PUT: /Poi");
 
     var id_value = req.body.id || req.query.id;
     var description_value = req.body.description || req.query.description || req.params.description;
-    var weight_value = req.body.weight || req.query.weight || req.params.weight;
+    var name_value = req.body.name || req.query.name || req.params.name;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude;
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
-    var height_value = req.body.height || req.query.height || req.params.height;
+    var categoryId_value = req.body.categoryId || req.query.categoryId || req.params.categoryId;
 
     log.debug("  -> id:          " + id_value);
+    log.debug("  -> name:        " + name_value);
     log.debug("  -> description: " + description_value);
-    log.debug("  -> weight:      " + weight_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
-    log.debug("  -> height:      " + height_value);
+    log.debug("  -> categoryId:  " + categoryId_value);
 
-    if (height_value == null)
-      height_value = 0;
-
-    if (id_value == null || description_value == null || weight_value == null || latitude_value == null || longitude_value == null) {
+    if (id_value == null || description_value == null || name_value == null || latitude_value == null || longitude_value == null || categoryId_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
     }
     else
     {
       //almacenamos los datos del formulario en un objeto
-      var uxoData = {
+      var PoiData = {
           id : id_value,
           description : description_value,
-          weight : weight_value,
+          name : name_value,
           latitude : latitude_value,
           longitude : longitude_value,
-          height : height_value
+          categoryId : categoryId_value
       };
-      UxoModel.updateUxo(uxoData,function(error, data)
+      PoiModel.updatePoi(PoiData,function(error, data)
       {
           if (data == null)
           {
@@ -392,7 +388,7 @@ router.put('/uxo', function(req, res)
             //si se ha actualizado correctamente mostramos un mensaje
             if(data && data.message)
             {
-              res.status(200).json({"response": {"status":0,"data": {"record": [uxoData]}}})
+              res.status(200).json({"response": {"status":0,"data": {"record": [PoiData]}}})
             }
             else
             {
@@ -404,18 +400,18 @@ router.put('/uxo', function(req, res)
 });
 
 /**
- * @api {post} /kyrosapi/uxo/ Create new UXO
- * @apiName PostNewUxo
- * @apiGroup UXO
+ * @api {post} /kyrosapi/Poi/ Create new Poi
+ * @apiName PostNewPoi
+ * @apiGroup Poi
  * @apiVersion 1.0.1
- * @apiDescription Create new UXO
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/uxo
+ * @apiDescription Create new Poi
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/Poi
  *
- * @apiParam {String} description Description of UXO
- * @apiParam {Number} weight Weight of UXO
- * @apiParam {Number} longitude Longitude of the UXO (WGS84)
+ * @apiParam {String} description Description of Poi
+ * @apiParam {String} name Name of Poi
+ * @apiParam {Number} longitude Longitude of the Poi (WGS84)
  * @apiParam {Number} latitude Latitude of the UXI (WGS84)
- * @apiParam {Number} [height=0] Depth under sea (meters)
+ * @apiParam {Number} categoryId Category of Poi
  *
  * @apiSuccess {json} message Result message
  * @apiSuccessExample Success-Response:
@@ -429,56 +425,52 @@ router.put('/uxo', function(req, res)
  *           {
  *              "id": 123,
  *              "description": "Explosivo militar",
- *              "weight": 200,
+ *              "name": "exp01",
  *              "latitude": 40.121323,
  *              "longitude": "1.4667878",
- *              "height": "40"
+ *              "categoryId": "1"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
  */
-router.post("/uxo", function(req,res)
+router.post("/Poi", function(req,res)
 {
-    log.info("POST: /uxo");
+    log.info("POST: /Poi");
 
-    // Crear un objeto con los datos a insertar del uxo
+    // Crear un objeto con los datos a insertar del Poi
     var description_value = req.body.description || req.query.description || req.params.description;
-    var weight_value = req.body.weight || req.query.weight || req.params.weight;
+    var name_value = req.body.name || req.query.name || req.params.name;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude;
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
-    var height_value = req.body.height || req.query.height || req.params.height;
+    var categoryId_value = req.body.categoryId || req.query.categoryId || req.params.categoryId;
 
     log.debug("  -> description: " + description_value);
-    log.debug("  -> weight:      " + weight_value);
+    log.debug("  -> name:        " + name_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
-    log.debug("  -> height:      " + height_value);
+    log.debug("  -> categoryId:  " + categoryId_value);
 
-    if (height_value == null)
-      height_value = 0;
-
-    if (description_value == null || weight_value == null || latitude_value == null || longitude_value == null) {
+    if (description_value == null || name_value == null || latitude_value == null || longitude_value == null || categoryId_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
     }
     else
     {
-      var uxoData = {
+      var PoiData = {
           id : null,
           description : description_value,
-          weight : weight_value,
+          name : name_value,
           latitude : latitude_value,
           longitude : longitude_value,
-          height : height_value
+          categoryId : categoryId_value
       };
 
-      UxoModel.insertUxo(uxoData,function(error, data)
+      PoiModel.insertPoi(PoiData,function(error, data)
       {
         if (data == null)
         {
@@ -489,8 +481,8 @@ router.post("/uxo", function(req,res)
           // si se ha insertado correctamente mostramos su messaje de exito
           if(data && data.insertId)
           {
-              uxoData.id = data.insertId;
-              res.status(201).json({"response": {"status":0,"data": {"record": [uxoData]}}})
+              PoiData.id = data.insertId;
+              res.status(201).json({"response": {"status":0,"data": {"record": [PoiData]}}})
           }
           else
           {
@@ -501,16 +493,16 @@ router.post("/uxo", function(req,res)
     }
 });
 
-/* DELETE. Eliminar un uxo */
+/* DELETE. Eliminar un Poi */
 /**
- * @api {delete} /kyrosapi/uxo Delete UXO
- * @apiName DeleteUxo
- * @apiGroup UXO
+ * @api {delete} /kyrosapi/Poi Delete Poi
+ * @apiName DeletePoi
+ * @apiGroup Poi
  * @apiVersion 1.0.1
- * @apiDescription Delete UXO
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/uxo
+ * @apiDescription Delete Poi
+ * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/Poi
  *
- * @apiParam {Number} id UXO unique ID
+ * @apiParam {Number} id Poi unique ID
  *
  * @apiSuccess {json} message Result message
  * @apiSuccessExample Success-Response:
@@ -524,26 +516,25 @@ router.post("/uxo", function(req,res)
  *           {
  *              "id": 123,
  *              "description": "Explosivo militar",
- *              "weight": 200,
+ *              "name": "exp01",
  *              "latitude": 40.121323,
  *              "longitude": "1.4667878",
- *              "height": "40"
+ *              "categoryId": "1"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
  */
-router.delete("/uxo/", function(req, res)
+router.delete("/Poi/", function(req, res)
 {
-    log.info("DELETE: /uxos");
+    log.info("DELETE: /Poi");
 
-    // id del uxo a eliminar
+    // id del Poi a eliminar
     var id = req.body.id || req.params.id || req.query.id;
     log.debug("  -> id: " + id);
 
@@ -553,7 +544,7 @@ router.delete("/uxo/", function(req, res)
     }
     else
     {
-      UxoModel.deleteUxo(id,function(error, data)
+      PoiModel.deletePoi(id,function(error, data)
       {
         if (data == null)
         {

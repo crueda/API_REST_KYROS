@@ -31,20 +31,20 @@ var mysql = require('mysql');
 var connection = mysql.createPool(dbConfig);
 
 // Crear un objeto para ir almacenando todo lo necesario
-var uxoModel = {};
+var poiModel = {};
 
-// Obtener todos las uxos
-uxoModel.getUxos = function(startRow, endRow, sortBy, callback)
+// Obtener todos los pois
+poiModel.getPois = function(startRow, endRow, sortBy, callback)
 {
   if (connection)
   {
-    var sqlCount = 'SELECT count(*) as nrows FROM POI where CATEGORY_ID=' + properties.get('kyros.uxo.category.id');
+    var sqlCount = "SELECT count(*) as nrows FROM POI";
     log.debug ("Query: "+sqlCount);
     connection.query(sqlCount, function(err, row)
     {
       if(row)
       {
-        var consulta = 'SELECT POI_ID as id, DESCRIPTION as description, WEIGHT as weight, LATITUDE as latitude, LONGITUDE as longitude, ELEVATION as height FROM POI where CATEGORY_ID=' + properties.get('kyros.uxo.category.id');
+        var consulta = "SELECT POI_ID as id, DESCRIPTION as description, NAME as name, CATEGORY_ID as categoryId, LATITUDE as latitude, LONGITUDE as longitude FROM POI";
 
         var totalRows = row[0].nrows;
 
@@ -59,7 +59,7 @@ uxoModel.getUxos = function(startRow, endRow, sortBy, callback)
           for (var i=0; i<vsortBy.length; i++ ) {
             if (vsortBy[i].charAt(0) == '-') {
               var element = vsortBy[i].substring(1, vsortBy[i].length);
-              if (element == 'id' || element == 'description' || element == 'weight' || element == 'longitude' || element == 'latitude' || element == 'height')
+              if (element == 'id' || element == 'description' || element == 'name' || element == 'categoryId' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element + ' desc';
@@ -68,7 +68,7 @@ uxoModel.getUxos = function(startRow, endRow, sortBy, callback)
               }
             } else {
               var element = vsortBy[i];
-              if (element == 'id' || element == 'description' || element == 'weight' || element == 'longitude' || element == 'latitude' || element == 'height')
+              if (element == 'id' || element == 'description' || element == 'name' || element == 'categoryId' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element;
@@ -116,12 +116,12 @@ uxoModel.getUxos = function(startRow, endRow, sortBy, callback)
 
 }
 
-// Obtener un uxo por su id
-uxoModel.getUxo = function(id,callback)
+// Obtener un poi por su id
+poiModel.getPoi = function(id,callback)
 {
     if (connection)
     {
-        var sql = 'SELECT POI_ID as id, DESCRIPTION as description, WEIGHT as weight, LATITUDE as latitude, LONGITUDE as longitude, ELEVATION as height FROM POI WHERE POI_ID = ' + connection.escape(id);
+        var sql = "SELECT POI_ID as id, DESCRIPTION as description, NAME as name, CATEGORY_ID as categoryId, LATITUDE as latitude, LONGITUDE as longitude FROM POI WHERE POI_ID = " + connection.escape(id);
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, row)
         {
@@ -141,17 +141,17 @@ uxoModel.getUxo = function(id,callback)
     }
 }
 
-// Actualizar un uxo
-uxoModel.updateUxo = function(uxoData, callback)
+// Actualizar un poi
+poiModel.updatePoi = function(poiData, callback)
 {
     if(connection)
     {
-        var sql = 'UPDATE POI SET DESCRIPTION = ' + connection.escape(uxoData.description) + ',' +
-        'WEIGHT = ' + connection.escape(uxoData.weight) + ',' +
-        'LATITUDE = ' + connection.escape(uxoData.latitude) + ',' +
-        'LONGITUDE = ' + connection.escape(uxoData.longitude) + ',' +
-        'ELEVATION = ' + connection.escape(uxoData.height) + ' ' +
-        'WHERE POI_ID = ' + uxoData.id;
+        var sql = 'UPDATE POI SET DESCRIPTION = ' + connection.escape(poiData.description) + ',' +
+        'NAME = ' + connection.escape(poiData.name) + ',' +
+        'CATEGORY_ID = ' + connection.escape(poiData.categoryId) + ',' +
+        'LATITUDE = ' + connection.escape(poiData.latitude) + ',' +
+        'LONGITUDE = ' + connection.escape(poiData.longitude) + ' ' +
+        'WHERE POI_ID = ' + poiData.id;
 
         log.debug ("Query: "+sql);
 
@@ -171,21 +171,19 @@ uxoModel.updateUxo = function(uxoData, callback)
     {
       callback(null, null);
     }
-
 }
 
-//añadir una nuevo uxo
-uxoModel.insertUxo = function(uxoData,callback)
+//añadir una nuevo poi
+poiModel.insertPoi = function(poiData,callback)
 {
     if (connection)
     {
-        var sql = 'INSERT INTO POI SET DESCRIPTION = ' + connection.escape(uxoData.description) + ',' +
-        'CATEGORY_ID = ' + properties.get('kyros.uxo.category.id') + ',' +
+        var sql = 'INSERT INTO POI SET DESCRIPTION = ' + connection.escape(poiData.description) + ',' +
         'DATE = ' + new Date().valueOf() + ',' +
-        'WEIGHT = ' + connection.escape(uxoData.weight) + ',' +
-        'ELEVATION = ' + connection.escape(uxoData.height) + ',' +
-        'LATITUDE = ' + connection.escape(uxoData.latitude) + ',' +
-        'LONGITUDE = ' + connection.escape(uxoData.longitude);
+        'CATEGORY_ID = ' + connection.escape(poiData.categoryId) + ',' +
+        'NAME = ' + connection.escape(poiData.name) + ',' +
+        'LATITUDE = ' + connection.escape(poiData.latitude) + ',' +
+        'LONGITUDE = ' + connection.escape(poiData.longitude);
 
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, result)
@@ -196,39 +194,9 @@ uxoModel.insertUxo = function(uxoData,callback)
             }
             else
             {
-                var uxoId = result.insertId;
-
-                // Se Crea una zona de exclusion centrada en el UXO
-
-                //Fecha inicial el momento actual
-                var milliseconds_init = (new Date).getTime();
-
-                //Fecha inicial final: inicial + 1 año
-                var milliseconds_end = (new Date).getTime() + 31556900000;
-
-                var sql = 'INSERT INTO AREA SET DESCRIPTION = \'' + 'uxo_' + uxoId + '\',' +
-                'DATE_INIT = ' + milliseconds_init + ',' +
-                'DATE_END = ' + milliseconds_end + ',' +
-                'HOUR_INIT = ' + '0' + ',' +
-                'HOUR_END = ' + '86400' + ',' +
-                'TYPE_AREA = ' + '\'F\'' + ',' +
-                'RADIUS = ' + properties.get('kyros.uxo.radius') + ',' +
-                'USER_NAME = \'sumoAPI_uxo\'';
-
-                log.debug ("Query: "+sql);
-
-                connection.query(sql, function(error, result)
-                {
-                  if(error)
-                  {
-                     callback(error, null);
-                  }
-                  else
-                  {
-                    //devolvemos el id del uxo insertada
-                    callback(null,{"insertId" : uxoId});
-                  }
-                });
+                var poiId = result.insertId;
+                //devolvemos el id del poi insertada
+                callback(null,{"insertId" : poiId});
             }
         });
     }
@@ -238,21 +206,19 @@ uxoModel.insertUxo = function(uxoData,callback)
     }
 }
 
-// Eliminar un uxo pasando la id a eliminar
-uxoModel.deleteUxo = function(id, callback)
+// Eliminar un poi pasando la id a eliminar
+poiModel.deletePoi = function(id, callback)
 {
     if(connection) {
-        var sqlExists = 'SELECT POI_ID as id, DESCRIPTION as description, WEIGHT as weight, LATITUDE as latitude, LONGITUDE as longitude, ELEVATION as height FROM POI WHERE POI_ID = ' + connection.escape(id);
+        var sqlExists = "SELECT POI_ID as id, DESCRIPTION as description, NAME as name, CATEGORY_ID as categoryId, LATITUDE as latitude, LONGITUDE as longitude FROM POI WHERE POI_ID = " + connection.escape(id);
 
         log.debug ("Query: "+sqlExists);
         connection.query(sqlExists, function(err, row)
         {
-            //si existe la id del uxo a eliminar
+            //si existe la id del poi a eliminar
             if(row) {
-                var sqlPoi = 'DELETE FROM POI WHERE POI_ID = ' + connection.escape(id);
-
+                var sqlPoi = "DELETE FROM POI WHERE POI_ID = " + connection.escape(id);
                 log.debug ("Query: "+sqlPoi);
-
                 connection.query(sqlPoi, function(error, result)
                 {
                     if(error)
@@ -261,25 +227,7 @@ uxoModel.deleteUxo = function(id, callback)
                     }
                     else
                     {
-                        // Borrar la zona de exclusion asociada
-                        var area_description = "uxo_" + id;
-
-                        var sqlArea = "DELETE FROM AREA WHERE DESCRIPTION = '" + area_description + "'";
-
-                        log.debug ("Query: "+sqlArea);
-
-                        connection.query(sqlArea, function(error, result)
-                        {
-                            if(error)
-                            {
-                              callback(error, null);
-                            }
-                            else
-                            {
-                              // se devuelven los datos del elemento eliminado
-                              callback(null,row);
-                            }
-                        });
+                      callback(null,row);
                     }
                 });
             }
@@ -296,4 +244,4 @@ uxoModel.deleteUxo = function(id, callback)
 }
 
 //exportamos el objeto para tenerlo disponible en la zona de rutas
-module.exports = uxoModel;
+module.exports = poiModel;
