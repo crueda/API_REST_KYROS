@@ -139,11 +139,11 @@ var log = require('tracer').console({
  * @apiGroup Layer
  * @apiVersion 1.0.1
  * @apiDescription List of layers
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/layers
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/layers
  *
  * @apiParam {Number} [startRow] Number of first element
  * @apiParam {Number} [endRow] Number of last element
- * @apiParam {String="id","url","showName","visible","transparent","type","zindex"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
+ * @apiParam {String="id","name","showName","visible","transparent"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
  *
  * @apiSuccess {Object[]} layer       List of layers
  * @apiSuccessExample Success-Response:
@@ -159,28 +159,23 @@ var log = require('tracer').console({
  *         "record" : [
  *           {
  *             "id": 1,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "Countries",
  *             "showName": "Countries",
  *             "visible": "false",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 0
+ *             "transparent": "false"
  *           },
  *           {
  *             "id": 2,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "satellite",
  *             "showName": "Countries satellite",
  *             "visible": "true",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 1
+ *             "transparent": "false"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -226,18 +221,15 @@ router.post('/layers/', function(req, res)
  * @apiGroup Layer
  * @apiVersion 1.0.1
  * @apiDescription Layer information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/layer
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/layer
  *
  * @apiParam {Number} id Layer unique ID
  *
  * @apiSuccess {Number} id Identification of the route
- * @apiSuccess {String} url URL of WMS layer
  * @apiSuccess {String} name Name of WMS layer
  * @apiSuccess {String} showName Show name of the layer
  * @apiSuccess {String} visible Visibility of the layer ('true' or 'false')
  * @apiSuccess {String} transparent Transparency of the layer ('true' or 'false')
- * @apiSuccess {String} type Type of layer (0=Forecast, 1=Observer)
- * @apiSuccess {String} zindex z-index of layer
  * @apiSuccessExample Success-Response:
  *     https/1.1 200 OK
  *     {
@@ -251,28 +243,17 @@ router.post('/layers/', function(req, res)
  *         "record" : [
  *           {
  *             "id": 1,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "http://demo.opengeo.org/geoserver/wms",
  *             "showName": "Countries",
  *             "visible": "false",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 0
+ *             "transparent": "false"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiError LayerNotFound The <code>id</code> of the layer was not found
- * @apiErrorExample {json} Error-Response:
- *     https/1.1 202
- *     {
- *      "response": {
- *        "status": -1000,
- *        "description": "Missing element"
- *      }
- *     }
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingRegisterError
@@ -324,13 +305,10 @@ router.get('/layer/:id', function(req, res)
  * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/layer
  *
  * @apiParam {Number} id Identification of the route
- * @apiParam {String} url URL of WMS layer
  * @apiParam {String} name Name of WMS layer
  * @apiParam {String} showName Show name of the layer
  * @apiParam {String} visible Visibility of the layer ('true' or 'false')
  * @apiParam {String} transparent Transparency of the layer ('true' or 'false')
- * @apiParam {String} type Type of layer (0=Forecast, 1=Observer)
- * @apiParam {String} zindex z-index of layer
  *
  * @apiSuccess {String} message Result message
  * @apiSuccessExample Success-Response:
@@ -344,12 +322,10 @@ router.get('/layer/:id', function(req, res)
  *         "record" : [
  *           {
  *             "id": 1,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "http://demo.opengeo.org/geoserver/wms",
  *             "showName": "Countries",
  *             "visible": "false",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 0
+ *             "transparent": "false"
  *           }]
  *        }
  *       }
@@ -366,24 +342,18 @@ router.put('/layer/', function(req, res)
     log.info("PUT: /layer");
 
     var id_value = req.body.id || req.query.id || req.params.id;
-    var url_value = req.body.url || req.query.url || req.params.url;
     var name_value = req.body.name || req.query.name || req.params.name;
     var showName_value = req.body.showName || req.query.showName || req.params.showName;
     var visible_value = req.body.visible || req.query.visible || req.params.visible;
     var transparent_value = req.body.transparent || req.query.transparent || req.params.transparent;
-    var type_value = req.body.type || req.query.type || req.params.type;
-    var zindex_value = req.body.zindex || req.query.zindex || req.params.zindex;
 
     log.debug("  -> id:          " + id_value);
-    log.debug("  -> url:         " + url_value);
     log.debug("  -> name:        " + name_value);
     log.debug("  -> showName:    " + showName_value);
     log.debug("  -> visible:     " + visible_value);
     log.debug("  -> transparent: " + transparent_value);
-    log.debug("  -> type:        " + type_value);
-    log.debug("  -> zindex:      " + zindex_value);
 
-    if (id_value == null || url_value == null || name_value == null || showName_value == null || visible_value == null || transparent_value == null || type_value == null || zindex_value == null) {
+    if (id_value == null || name_value == null || showName_value == null || visible_value == null || transparent_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
     }
     else
@@ -391,13 +361,10 @@ router.put('/layer/', function(req, res)
       //almacenar los datos en un objeto
       var layerData = {
         id: id_value,
-        url: url_value,
         name: name_value,
         showName: showName_value,
         visible: visible_value,
-        transparent: transparent_value,
-        type: type_value,
-        zindex: zindex_value
+        transparent: transparent_value
       };
 
       // Llamar al modelo
@@ -429,15 +396,12 @@ router.put('/layer/', function(req, res)
  * @apiGroup Layer
  * @apiVersion 1.0.1
  * @apiDescription Create new Layer
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/layer
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/layer
  *
- * @apiParam {String} url URL of WMS layer
  * @apiParam {String} name Name of WMS layer
  * @apiParam {String} showName Show name of the layer
  * @apiParam {String} visible Visibility of the layer ('true' or 'false')
  * @apiParam {String} transparent Transparency of the layer ('true' or 'false')
- * @apiParam {String} type Type of layer (0=Forecast, 1=Observer)
- * @apiParam {String} zindex z-index of layer
  *
  * @apiSuccess {String} message Result message
  * @apiSuccessExample Success-Response:
@@ -450,19 +414,16 @@ router.put('/layer/', function(req, res)
  *         "record" : [
  *           {
  *             "id": 1,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "http://demo.opengeo.org/geoserver/wms",
  *             "showName": "Countries",
  *             "visible": "false",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 0
+ *             "transparent": "false"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
@@ -471,36 +432,27 @@ router.post("/layer", function(req,res)
 {
     log.info("POST: /layer");
 
-    var url_value = req.body.url || req.query.url || req.params.url;
     var name_value = req.body.name || req.query.name || req.params.name;
     var showName_value = req.body.showName || req.query.showName || req.params.showName;
     var visible_value = req.body.visible || req.query.visible || req.params.visible;
     var transparent_value = req.body.transparent || req.query.transparent || req.params.transparent;
-    var type_value = req.body.type || req.query.type || req.params.type;
-    var zindex_value = req.body.zindex || req.query.zindex || req.params.zindex;
 
-    log.debug("  -> url:         " + url_value);
     log.debug("  -> name:        " + name_value);
     log.debug("  -> showName:    " + showName_value);
     log.debug("  -> visible:     " + visible_value);
     log.debug("  -> transparent: " + transparent_value);
-    log.debug("  -> type:        " + type_value);
-    log.debug("  -> zindex:      " + zindex_value);
 
-    if (url_value == null || name_value == null || showName_value == null || visible_value == null || transparent_value == null || type_value == null || zindex_value == null) {
+    if (name_value == null || showName_value == null || visible_value == null || transparent_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
     }
     else
     {
       var layerData = {
         id: null,
-        url: url_value,
         name: name_value,
         showName: showName_value,
         visible: visible_value,
-        transparent: transparent_value,
-        type: type_value,
-        zindex: zindex_value
+        transparent: transparent_value
       };
 
       LayerModel.insertLayer(layerData,function(error, data)
@@ -533,7 +485,7 @@ router.post("/layer", function(req,res)
  * @apiGroup Layer
  * @apiVersion 1.0.1
  * @apiDescription Delete layer
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/layer
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/layer
  *
  * @apiParam {Number} id Layer unique ID
  *
@@ -548,19 +500,16 @@ router.post("/layer", function(req,res)
  *         "record" : [
  *           {
  *             "id": 1,
- *             "url": "http://demo.opengeo.org/geoserver/wms",
+ *             "name": "http://demo.opengeo.org/geoserver/wms",
  *             "showName": "Countries",
  *             "visible": "false",
- *             "transparent": "false",
- *             "type": 0,
- *             "zindex": 0
+ *             "transparent": "false"
  *           }]
  *        }
  *       }
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError

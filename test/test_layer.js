@@ -34,11 +34,8 @@ describe('Layer', function() {
     var body = {
       name: 'name of layer',
       showName: 'showName of layer',
-      url: 'url of layer',
       visible: 'true',
-      transparent: 'true',
-      type: '0',
-      zindex: '0'
+      transparent: 'true'
   	};
 	request(url)
 	.post('/kyrosapi/layer')
@@ -74,11 +71,8 @@ describe('Layer', function() {
   id: layerInserted,
   name: 'name of layer',
   showName: 'showName of layer',
-  url: 'url of layer',
   visible: 'true',
-  transparent: 'true',
-  type: '0',
-  zindex: '0'
+  transparent: 'true'
   };
   request(url)
   .put('/kyrosapi/layer')

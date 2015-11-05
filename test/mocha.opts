@@ -1,4 +1,4 @@
-./test/test_poi.js
+./test/test_layer.js
 
 --reporter spec
 --growl

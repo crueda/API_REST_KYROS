@@ -45,7 +45,7 @@ layerModel.getLayers = function(startRow, endRow, sortBy, callback)
     {
       if(row)
       {
-        var consulta = "SELECT ID as id, WMS_URL_OUTSIDE as url, LAYER_NAME as name, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent, LAYER_TYPE as type, Z_INDEX as zindex FROM CARTOGRAPHY_LAYER";
+        var consulta = "SELECT ID as id, LAYER_NAME as name, LAYER_SHOW_NAME as showName, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent FROM CARTOGRAPHY_LAYER";
 
         var totalRows = row[0].nrows;
 
@@ -60,7 +60,7 @@ layerModel.getLayers = function(startRow, endRow, sortBy, callback)
           for (var i=0; i<vsortBy.length; i++ ) {
             if (vsortBy[i].charAt(0) == '-') {
               var element = vsortBy[i].substring(1, vsortBy[i].length);
-              if (element == 'id' || element == 'name' || element == 'url' || element == 'visible' || element == 'transparent' || element == 'type' || element == 'zindex')
+              if (element == 'id' || element == 'name' || element == 'showName' || element == 'visible' || element == 'transparent')
               {
                 if (orderBy == '')
                   orderBy = element + ' desc';
@@ -69,7 +69,7 @@ layerModel.getLayers = function(startRow, endRow, sortBy, callback)
               }
             } else {
               var element = vsortBy[i];
-              if (element == 'id' || element == 'name' || element == 'url' || element == 'visible' || element == 'transparent' || element == 'type' || element == 'zindex')
+              if (element == 'id' || element == 'name' || element == 'showName' || element == 'visible' || element == 'transparent')
               {
                 if (orderBy == '')
                   orderBy = element;
@@ -120,7 +120,7 @@ layerModel.getLayer = function(id,callback)
 {
     if (connection)
     {
-        var sql = "SELECT ID as id, WMS_URL_OUTSIDE as url, LAYER_NAME as name, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent, LAYER_TYPE as type, Z_INDEX as zindex FROM CARTOGRAPHY_LAYER WHERE ID=" + connection.escape(id);
+        var sql = "SELECT ID as id, WMS_URL_OUTSIDE as url, LAYER_NAME as name, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent FROM CARTOGRAPHY_LAYER WHERE ID=" + connection.escape(id);
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, row)
         {
@@ -145,15 +145,11 @@ layerModel.updateLayer = function(layerData, callback)
 {
     if(connection)
     {
-      var consulta = "SELECT ID as id, WMS_URL_OUTSIDE as url, LAYER_NAME as name, LAYER_SHOW_NAME as show name, IS_VISIBLE as visible, IS_TRANSPARENT as transparent, LAYER_TYPE as type, Z_INDEX as zindex FROM CARTOGRAPHY_LAYER";
-
-        var sql = 'UPDATE CARTOGRAPHY_LAYER SET WMS_URL_OUTSIDE = ' + connection.escape(layerData.url) + ',' +
+        var sql = 'UPDATE CARTOGRAPHY_LAYER SET ' +
         'LAYER_SHOW_NAME = ' + connection.escape(layerData.showName) + ',' +
         'LAYER_NAME = ' + connection.escape(layerData.name) + ',' +
         'IS_VISIBLE = ' + connection.escape(layerData.visible) + ',' +
-        'IS_TRANSPARENT = ' + connection.escape(layerData.transparent) + ',' +
-        'Z_INDEX = ' + connection.escape(layerData.zindex) + ',' +
-        'LAYER_TYPE = ' + connection.escape(layerData.type) + ' ' +
+        'IS_TRANSPARENT = ' + connection.escape(layerData.transparent) + ' ' +
         'WHERE ID = ' + layerData.id;
 
         log.debug ("Query: "+sql);
@@ -180,13 +176,11 @@ layerModel.insertLayer = function(layerData,callback)
 {
     if (connection)
     {
-        var sql = 'INSERT INTO CARTOGRAPHY_LAYER SET WMS_URL_OUTSIDE = ' + connection.escape(layerData.url) + ',' +
+        var sql = 'INSERT INTO CARTOGRAPHY_LAYER SET ' +
         'LAYER_SHOW_NAME = ' + connection.escape(layerData.showName) + ',' +
         'LAYER_NAME = ' + connection.escape(layerData.name) + ',' +
         'IS_VISIBLE = ' + connection.escape(layerData.visible) + ',' +
-        'IS_TRANSPARENT = ' + connection.escape(layerData.transparent) + ',' +
-        'Z_INDEX = ' + connection.escape(layerData.zindex) + ',' +
-        'LAYER_TYPE = ' + connection.escape(layerData.type);
+        'IS_TRANSPARENT = ' + connection.escape(layerData.transparent);
 
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, result)
@@ -212,7 +206,7 @@ layerModel.insertLayer = function(layerData,callback)
 layerModel.deleteLayer = function(id, callback)
 {
     if(connection) {
-        var sqlExists = 'SELECT ID as id, WMS_URL_OUTSIDE as url, LAYER_NAME as name, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent, LAYER_TYPE as type, Z_INDEX as zindex FROM CARTOGRAPHY_LAYER WHERE ID = ' + connection.escape(id);
+        var sqlExists = 'SELECT ID as id, LAYER_NAME as name, LAYER_SHOW_NAME as showName, LAYER_SHOW_NAME as showName, IS_VISIBLE as visible, IS_TRANSPARENT as transparent FROM CARTOGRAPHY_LAYER WHERE ID = ' + connection.escape(id);
 
         log.debug ("Query: "+sqlExists);
         connection.query(sqlExists, function(err, row)
