@@ -140,7 +140,7 @@ var log = require('tracer').console({
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription List of routes
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/routes
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/routes
  *
  * @apiParam {Number} [startRow] Number of first element
  * @apiParam {Number} [endRow] Number of last element
@@ -178,7 +178,6 @@ var log = require('tracer').console({
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -225,7 +224,7 @@ router.post('/routes/', function(req, res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Route information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/route
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/route
  *
  * @apiParam {Number} id Route unique ID
  *
@@ -258,7 +257,6 @@ router.post('/routes/', function(req, res)
  * @apiError RouteNotFound The <code>id</code> of the route was not found.
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingRegisterError
@@ -307,7 +305,7 @@ router.get('/route/:id', function(req, res)
    * @apiGroup Route
    * @apiVersion 1.0.1
    * @apiDescription Update route
-   * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/route
+   * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/route
    *
    * @apiParam {Number} id Route unique ID
    * @apiParam {String} description Description of the vertex
@@ -337,7 +335,6 @@ router.get('/route/:id', function(req, res)
    *     }
    *
    * @apiUse TokenHeader
-   * @apiUse LoginError
    * @apiUse TokenError
    * @apiUse TokenExpiredError
    * @apiUse MissingParameterError
@@ -406,7 +403,7 @@ router.put('/route/', function(req, res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Create new route
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/route
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/route
  *
  * @apiParam {String} description Description of the route
  * @apiParam {String} routeType Type of route F=forbidden, A=Allow, G=Generic)
@@ -504,7 +501,7 @@ router.post("/route", function(req,res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Delete route
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/route
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/route
  *
  * @apiParam {Number} id Route unique ID
  * @apiSuccess {json} message Result message
@@ -529,7 +526,6 @@ router.post("/route", function(req,res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError

@@ -42,7 +42,7 @@ userModel.getUsers = function(startRow, endRow, sortBy, callback)
       {
         if(row)
         {
-          var consulta = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID group by id";
+          var consulta = "SELECT USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as packages FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID group by USER_GUI.USERNAME";
           var totalRows = row[0].nrows;
 
           var sql = '';

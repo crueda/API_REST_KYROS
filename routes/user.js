@@ -139,7 +139,7 @@ var log = require('tracer').console({
  * @apiGroup User
  * @apiVersion 1.0.1
  * @apiDescription List of users
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/users
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/users
  *
  * @apiSuccess {json} users       List of users
  * @apiSuccessExample {json} Success-Response:
@@ -156,20 +156,19 @@ var log = require('tracer').console({
  *          "id": 1,
  *          "username": "catapult",
  *          "password": "ef4095ba96e4950581a6cc5f9de4092a20901a2cfaf9d2a3b02891afceae6e34",
- *          "role": "administrador"
+ *          "packages": "administrador"
  *        },
  *        {
  *          "id": 3,
  *          "username": "iberdrola",
  *          "password": "ef4095ba96e4950581a6cc5f9de4092a20901a2cfaf9d2a3b02891afceae6e34",
- *          "role": "administrador"
+ *          "packages": "administrador"
  *        },
  *      ]}
  *    }
  *  }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -215,7 +214,7 @@ router.post('/users/', function(req, res)
  * @apiGroup User
  * @apiVersion 1.0.1
  * @apiDescription User information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/user
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/user
  *
  * @apiParam {Number} id User unique ID
  *
@@ -232,9 +231,9 @@ router.post('/users/', function(req, res)
  *      "record": [
  *        {
  *          "id": 1,
- *          "username": "catapult",
+ *          "username": "crueda",
  *          "password": "ef4095ba96e4950581a6cc5f9de4092a20901a2cfaf9d2a3b02891afceae6e34",
- *          "role": "administrador"
+ *          "packages": "administrador"
  *        },
  *      ]}
  *    }
@@ -242,7 +241,6 @@ router.post('/users/', function(req, res)
  * @apiError UserNotFound The <code>id</code> of the user was not found
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingRegisterError
