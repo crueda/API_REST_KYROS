@@ -74,7 +74,7 @@ vertexModel.getVertexesArea = function(id, startRow, endRow, sortBy, callback)
           for (var i=0; i<vsortBy.length; i++ ) {
             if (vsortBy[i].charAt(0) == '-') {
               var element = vsortBy[i].substring(1, vsortBy[i].length);
-              if (element == 'id' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude' || element == 'altitude')
+              if (element == 'id' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element + ' desc';
@@ -83,7 +83,7 @@ vertexModel.getVertexesArea = function(id, startRow, endRow, sortBy, callback)
               }
             } else {
               var element = vsortBy[i];
-              if (element == 'id' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude' || element == 'altitude')
+              if (element == 'id' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element;
@@ -141,7 +141,7 @@ vertexModel.getVertexes = function(startRow, endRow, sortBy, callback)
     {
       if(row)
       {
-        var consulta = 'SELECT ID as id, AREA_ID as areaId, DESCRIPTION as description, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude, ALTITUDE as altitude FROM VERTEX'
+        var consulta = 'SELECT ID as id, AREA_ID as areaId, DESCRIPTION as description, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM VERTEX'
 
         var totalRows = row[0].nrows;
 
@@ -156,7 +156,7 @@ vertexModel.getVertexes = function(startRow, endRow, sortBy, callback)
           for (var i=0; i<vsortBy.length; i++ ) {
             if (vsortBy[i].charAt(0) == '-') {
               var element = vsortBy[i].substring(1, vsortBy[i].length);
-              if (element == 'id' || element == 'areaId' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude' || element == 'altitude')
+              if (element == 'id' || element == 'areaId' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element + ' desc';
@@ -165,7 +165,7 @@ vertexModel.getVertexes = function(startRow, endRow, sortBy, callback)
               }
             } else {
               var element = vsortBy[i];
-              if (element == 'id' || element == 'areaId' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude' || element == 'altitude')
+              if (element == 'id' || element == 'areaId' || element == 'description' || element == 'numVertex' || element == 'longitude' || element == 'latitude')
               {
                 if (orderBy == '')
                   orderBy = element;
@@ -218,7 +218,7 @@ vertexModel.getVertex = function(id,callback)
 {
     if (connection)
     {
-        var sql = 'SELECT ID as id, DESCRIPTION as description, AREA_ID as areaId, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude, ALTITUDE as altitude FROM VERTEX WHERE id = ' + connection.escape(id);
+        var sql = 'SELECT ID as id, DESCRIPTION as description, AREA_ID as areaId, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM VERTEX WHERE id = ' + connection.escape(id);
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, row)
         {
@@ -252,7 +252,6 @@ vertexModel.updateVertex = function(vertexData, callback)
         var sql = 'UPDATE VERTEX SET DESCRIPTION = ' + connection.escape(vertexData.description) + ',' +
         'AREA_ID = ' + connection.escape(vertexData.areaId) + ',' +
         'NUM_VERTEX = ' + connection.escape(vertexData.numVertex) + ',' +
-        'ALTITUDE = ' + connection.escape(vertexData.altitude) + ',' +
         'POS_LATITUDE_DEGREE = ' + latdeg + ',' +
         'POS_LATITUDE_MIN = ' + latmin + ',' +
         'POS_LONGITUDE_DEGREE = ' + londeg + ',' +
@@ -293,7 +292,6 @@ vertexModel.insertVertex = function(vertexData,callback)
         var sql = 'INSERT INTO VERTEX SET DESCRIPTION = ' + connection.escape(vertexData.description) + ',' +
         'AREA_ID = ' + connection.escape(vertexData.areaId) + ',' +
         'NUM_VERTEX = ' + connection.escape(vertexData.numVertex) + ',' +
-        'ALTITUDE = ' + connection.escape(vertexData.altitude) + ',' +
         'POS_LATITUDE_DEGREE = ' + latdeg + ',' +
         'POS_LATITUDE_MIN = ' + latmin + ',' +
         'POS_LONGITUDE_DEGREE = ' + londeg + ',' +
@@ -323,7 +321,7 @@ vertexModel.deleteVertex = function(id, callback)
 {
     if(connection)
     {
-        var sqlExists = 'SELECT ID as id, DESCRIPTION as description, AREA_ID as areaId, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude, ALTITUDE as altitude FROM VERTEX WHERE id = ' + connection.escape(id);
+        var sqlExists = 'SELECT ID as id, DESCRIPTION as description, AREA_ID as areaId, NUM_VERTEX as numVertex, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM VERTEX WHERE id = ' + connection.escape(id);
         log.debug ("Query: "+sqlExists);
         connection.query(sqlExists, function(err, row) {
             //si existe la id del vertice a eliminar

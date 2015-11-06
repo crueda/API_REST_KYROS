@@ -47,8 +47,7 @@ describe('Vertex', function() {
       description: 'Vértice: 1',
       numVertex: '1',
       latitude: '43.31418735795812',
-      longitude: '-2.319488525390625',
-      altitude: '10'
+      longitude: '-2.319488525390625'
   	};
 	request(url)
 	.post('/kyrosapi/vertex')
@@ -82,13 +81,12 @@ describe('Vertex', function() {
 
   it('[PUT]     Update vertex', function(done){
   var body = {
-  id: vertexInserted,
-  areaId: '892',
-  description: 'Vértice: 1',
-  numVertex: '1',
-  latitude: '43.31418735795812',
-  longitude: '-2.319488525390625',
-  altitude: '11'
+    id: vertexInserted,
+    areaId: '892',
+    description: 'Vértice: 1',
+    numVertex: '1',
+    latitude: '43.31418735795812',
+    longitude: '-2.319488525390625'
   };
   request(url)
   .put('/kyrosapi/vertex')

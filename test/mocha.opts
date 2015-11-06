@@ -1,4 +1,4 @@
-./test/test_layer.js
+./test/test_vertex.js
 
 --reporter spec
 --growl

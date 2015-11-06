@@ -154,7 +154,7 @@ function kcoords(px, py) {
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription List of vertexes assigned to area
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertexes/assignedTo/1020
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertexes/assignedTo/1020
  *
  * @apiParam {Number} [startRow] Number of first element
  * @apiParam {Number} [endRow] Number of last element
@@ -179,8 +179,7 @@ function kcoords(px, py) {
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           {
  *            "id": 8506,
@@ -188,8 +187,7 @@ function kcoords(px, py) {
  *            "description": "Vértice: 2",
  *            "numVertex": 2,
  *            "latitude": 43.19516498456403,
- *            "longitude": -2.42523193359375,
- *            "altitude": 0
+ *            "longitude": -2.42523193359375
  *           }
  *           }]
  *        }
@@ -197,7 +195,6 @@ function kcoords(px, py) {
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -246,7 +243,7 @@ router.post('/vertexes/assignedTo/:id', function(req, res)
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription List of vertexes
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertexes
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertexes
  * @apiSuccessExample Success-Response:
  *     https/1.1 200 OK
  *     {
@@ -264,8 +261,7 @@ router.post('/vertexes/assignedTo/:id', function(req, res)
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           {
  *            "id": 8506,
@@ -273,8 +269,7 @@ router.post('/vertexes/assignedTo/:id', function(req, res)
  *            "description": "Vértice: 2",
  *            "numVertex": 2,
  *            "latitude": 43.19516498456403,
- *            "longitude": -2.42523193359375,
- *            "altitude": 0
+ *            "longitude": -2.42523193359375
  *           }
  *           }]
  *        }
@@ -283,7 +278,6 @@ router.post('/vertexes/assignedTo/:id', function(req, res)
  *
  * @apiSuccess {Object[]} vertex       List of vertexes
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -329,7 +323,7 @@ router.post('/vertexes/', function(req, res)
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription Vertex information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertex
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertex
  *
  * @apiParam {Number} id Vertex unique ID
  *
@@ -339,7 +333,6 @@ router.post('/vertexes/', function(req, res)
  * @apiSuccess {Number} numVertex Number of the vertex in the area
  * @apiSuccess {Number} longitude Longitude of the vertex (WGS84)
  * @apiSuccess {Number} latitude Latitude of the vertex (WGS84)
- * @apiSuccess {Number} altitude Altitude of the vertex (in meters over sea level)
  * @apiSuccessExample Success-Response:
  *     https/1.1 200 OK
  *     {
@@ -357,8 +350,7 @@ router.post('/vertexes/', function(req, res)
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           }]
  *        }
@@ -368,7 +360,6 @@ router.post('/vertexes/', function(req, res)
  * @apiError VertexNotFound The <code>id</code> of the vertex was not found.
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingRegisterError
@@ -417,7 +408,7 @@ router.get('/vertex/:id', function(req, res)
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription Update vertex
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertex
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertex
  *
  * @apiParam {Number} id Vertex unique ID
  * @apiParam {String} areaId Identification of the area
@@ -425,7 +416,6 @@ router.get('/vertex/:id', function(req, res)
  * @apiParam {Number} numVertex Number of the vertex in the area
  * @apiParam {Number} longitude Longitude of the vertex (WGS84)
  * @apiParam {Number} latitude Latitude of the vertex (WGS84)
- * @apiParam {Number} [altitude=0] Altitude of the vertex (in meters over sea level)
  *
  * @apiSuccess {json} message Result message
  * @apiSuccessExample Success-Response:
@@ -442,8 +432,7 @@ router.get('/vertex/:id', function(req, res)
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           }]
  *        }
@@ -451,7 +440,6 @@ router.get('/vertex/:id', function(req, res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
@@ -466,17 +454,12 @@ router.put('/vertex/', function(req, res)
     var numVertex_value = req.body.numVertex || req.query.numVertex || req.params.numVertex;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
-    var altitude_value = req.body.altitude || req.query.altitude || req.params.altitude;
 
     log.debug("  -> areaId:      " + areaId_value);
     log.debug("  -> description: " + description_value);
     log.debug("  -> numVertex:   " + numVertex_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
-    log.debug("  -> altitude:    " + altitude_value);
-
-    if (altitude_value == null)
-      altitude_value = 0;
 
     if (areaId_value == null || description_value == null || numVertex_value == null || latitude_value == null || longitude_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
@@ -490,8 +473,7 @@ router.put('/vertex/', function(req, res)
           description : description_value,
           numVertex : numVertex_value,
           latitude : latitude_value,
-          longitude : longitude_value,
-          altitude : altitude_value
+          longitude : longitude_value
       };
 
       VertexModel.updateVertex(vertexData,function(error, data)
@@ -523,14 +505,13 @@ router.put('/vertex/', function(req, res)
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription Create new vertex
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertex
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertex
  *
  * @apiParam {Number} areaId Area identification
  * @apiParam {String} description Description of the vertex
  * @apiParam {Number} numVertex Number of the vertex in the area
  * @apiParam {Number} latitude Vertex latitude
  * @apiParam {Number} longitude Vertex longitude
- * @apiParam {Number} [altitude=0] Altitude of the vertex (in meters over sea level)
  *
  * @apiSuccess {json} message Result message
  * @apiSuccessExample Success-Response:
@@ -547,8 +528,7 @@ router.put('/vertex/', function(req, res)
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           }]
  *        }
@@ -556,7 +536,6 @@ router.put('/vertex/', function(req, res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
@@ -570,17 +549,12 @@ router.post("/vertex", function(req,res)
     var numVertex_value = req.body.numVertex || req.query.numVertex || req.params.numVertex;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude;
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
-    var altitude_value = req.body.altitude || req.query.altitude || req.params.altitude;
 
     log.debug("  -> areaId:      " + areaId_value);
     log.debug("  -> description: " + description_value);
     log.debug("  -> numVertex:   " + numVertex_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
-    log.debug("  -> altitude:    " + altitude_value);
-
-    if (altitude_value == null)
-      altitude_value = 0;
 
     if (areaId_value == null || description_value == null || numVertex_value == null || latitude_value == null || longitude_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
@@ -627,7 +601,7 @@ router.post("/vertex", function(req,res)
  * @apiGroup Area
  * @apiVersion 1.0.1
  * @apiDescription Delete vertex
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/vertex
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/vertex
  *
  * @apiParam {Number} id Vertex unique ID
  *
@@ -646,8 +620,7 @@ router.post("/vertex", function(req,res)
  *            "description": "Vértice: 1",
  *            "numVertex": null,
  *            "latitude": 43.314166666666665,
- *            "longitude": -2.033333333333333,
- *            "altitude": 0
+ *            "longitude": -2.033333333333333
  *           },
  *           }]
  *        }
