@@ -1,4 +1,4 @@
-./test/test_route.js
+./test/test_beacon.js
 
 --reporter spec
 --growl

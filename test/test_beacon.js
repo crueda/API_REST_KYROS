@@ -35,7 +35,6 @@ describe('Beacon', function() {
       posBeacon: '1',
       description: 'Baliza: 1',
       radius: '10',
-      timestamp: '2015-11-04T23:59:59Z',
       latitude: '43.31418735795812',
       longitude: '-2.319488525390625'
   	};
@@ -74,7 +73,6 @@ describe('Beacon', function() {
   posBeacon: '12',
   description: 'Beacon: 12',
   radius: '102',
-  timestamp: '2015-11-04T23:59:59Z',
   latitude: '43.314187357958122',
   longitude: '-2.3194885253906252'
   };

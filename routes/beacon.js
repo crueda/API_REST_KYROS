@@ -139,11 +139,11 @@ var log = require('tracer').console({
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription List of beacons
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/beacons
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/beacons
  *
  * @apiParam {Number} [startRow] Number of first element
  * @apiParam {Number} [endRow] Number of last element
- * @apiParam {String="id","routeId","description","timestamp","posBeacon","radius","latitude","longitude"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
+ * @apiParam {String="id","routeId","description","posBeacon","radius","latitude","longitude"}  [sortBy]     Results sorting by this param. You may indicate various parameters separated by commas. To indicate descending order you can use the - sign before the parameter
  *
  * @apiSuccess {Object[]} beacon       List of beacons
  * @apiSuccessExample Success-Response:
@@ -163,7 +163,6 @@ var log = require('tracer').console({
  *             "description": "Salida",
  *             "posBeacon": 1,
  *             "radius": 100,
- *             "timestamp": "2011-11-04T00:00:00Z,
  *             "latitude": 40.264348933803326,
  *             "longitude": -3.3876192569732666
  *          },
@@ -173,7 +172,6 @@ var log = require('tracer').console({
  *             "description": "Baliza: 2",
  *             "posBeacon": 2,
  *             "radius": 100,
- *             "timestamp": "2011-11-04T00:00:00Z,
  *             "latitude": 40.26421794392092,
  *             "longitude": -3.387898206710815
  *           },
@@ -183,7 +181,6 @@ var log = require('tracer').console({
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse PermissionError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
@@ -229,7 +226,7 @@ router.post('/beacons/', function(req, res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Beacon information
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/beacon
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/beacon
  *
  * @apiParam {Number} id Beacon unique ID
  *
@@ -237,7 +234,6 @@ router.post('/beacons/', function(req, res)
  * @apiSuccess {Number} routeId Identification of the route
  * @apiSuccess {Number} posBeacon Position of beacon in the route
  * @apiSuccess {Number} radius Radius of beacon
- * @apiSuccess {String} timestamp Date of the beacon in ISO format
  * @apiSuccess {Number} longitude Longitude of the vertex (WGS84)
  * @apiSuccess {Number} latitude Latitude of the vertex (WGS84)
  * @apiSuccessExample Success-Response:
@@ -257,7 +253,6 @@ router.post('/beacons/', function(req, res)
  *             "description": "Salida",
  *             "posBeacon": 1,
  *             "radius": 100,
- *             "timestamp": 2015-11-04T23:59:59Z,
  *             "latitude": 40.264348933803326,
  *             "longitude": -3.3876192569732666
  *          }
@@ -266,10 +261,7 @@ router.post('/beacons/', function(req, res)
  *       }
  *     }
  *
- * @apiError BeaconNotFound The <code>id</code> of the beacon was not found.
- *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingRegisterError
@@ -319,13 +311,12 @@ router.get('/beacon/:id', function(req, res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Update beacon
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/beacon
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/beacon
  *
  * @apiParam {Number} id Beacon unique ID
  * @apiParam {String} routeId Identification of the route
  * @apiParam {Number} posBeacon Position of beacon in the route
  * @apiParam {Number} radius Radius (in meters) of the beacon
- * @apiParam {String} timestamp Date of the beacon in ISO format
  * @apiParam {Number} longitude Longitude of the vertex (WGS84)
  * @apiParam {Number} latitude Latitude of the vertex (WGS84)
  *
@@ -344,7 +335,6 @@ router.get('/beacon/:id', function(req, res)
  *             "description": "Salida",
  *             "posBeacon": 1,
  *             "radius": 100,
- *             "timestamp": 2015-11-04T23:59:59Z,
  *             "latitude": 40.264348933803326,
  *             "longitude": -3.3876192569732666
  *          }
@@ -354,7 +344,6 @@ router.get('/beacon/:id', function(req, res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
@@ -368,7 +357,6 @@ router.put('/beacon/', function(req, res)
     var routeId_value = req.body.routeId || req.query.routeId || req.params.routeId;
     var posBeacon_value = req.body.posBeacon || req.query.posBeacon || req.params.posBeacon;
     var radius_value = req.body.radius || req.query.radius || req.params.radius;
-    var timestamp_value = req.body.timestamp || req.query.timestamp || req.params.timestamp;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
 
@@ -377,7 +365,6 @@ router.put('/beacon/', function(req, res)
     log.debug("  -> routeId:     " + routeId_value);
     log.debug("  -> posBeacon:   " + posBeacon_value);
     log.debug("  -> radius:      " + radius_value);
-    log.debug("  -> timestamp:   " + timestamp_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
 
@@ -393,7 +380,6 @@ router.put('/beacon/', function(req, res)
           description : description_value,
           posBeacon : posBeacon_value,
           radius : radius_value,
-          timestamp : timestamp_value,
           latitude : latitude_value,
           longitude : longitude_value
       };
@@ -425,7 +411,7 @@ router.put('/beacon/', function(req, res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Create new beacon
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/beacon
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/beacon
  *
  * @apiParam {Number} routeId Route identification
  * @apiParam {Number} posBeacon Position of beacon in the route
@@ -443,8 +429,6 @@ router.put('/beacon/', function(req, res)
  * 1
  * @apiParamExample {Number} radius
  * 300
- * @apiParamExample {String} timestamp
- * 2015-11-04T23:59:59Z
  * @apiParamExample {Number} latitude
  * 40.264348933803326
  * @apiParamExample {Number} longitude
@@ -465,7 +449,6 @@ router.put('/beacon/', function(req, res)
  *             "description": "Salida",
  *             "posBeacon": 1,
  *             "radius": 100,
- *             "timestamp": 2015-11-04T23:59:59Z,
  *             "latitude": 40.264348933803326,
  *             "longitude": -3.3876192569732666
  *          }
@@ -475,7 +458,6 @@ router.put('/beacon/', function(req, res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError
@@ -488,7 +470,6 @@ router.post("/beacon", function(req,res)
     var routeId_value = req.body.routeId || req.query.routeId || req.params.routeId;
     var posBeacon_value = req.body.posBeacon || req.query.posBeacon || req.params.posBeacon;
     var radius_value = req.body.radius || req.query.radius || req.params.radius;
-    var timestamp_value = req.body.timestamp || req.query.timestamp || req.params.timestamp;
     var latitude_value = req.body.latitude || req.query.latitude || req.params.latitude;
     var longitude_value = req.body.longitude || req.query.longitude || req.params.longitude;
 
@@ -496,11 +477,10 @@ router.post("/beacon", function(req,res)
     log.debug("  -> routeId:     " + routeId_value);
     log.debug("  -> posBeacon:   " + posBeacon_value);
     log.debug("  -> radius:      " + radius_value);
-    log.debug("  -> timestamp:   " + timestamp_value);
     log.debug("  -> latitude:    " + latitude_value);
     log.debug("  -> longitude:   " + longitude_value);
 
-    if (description_value == null || routeId_value == null || posBeacon_value == null || timestamp_value == null || radius_value == null || latitude_value == null || longitude_value == null) {
+    if (description_value == null || routeId_value == null || posBeacon_value == null || radius_value == null || latitude_value == null || longitude_value == null) {
       res.status(202).json({"response": {"status":status.STATUS_VALIDATION_ERROR,"description":messages.MISSING_PARAMETER}})
     }
     else
@@ -512,7 +492,6 @@ router.post("/beacon", function(req,res)
           description : description_value,
           posBeacon : posBeacon_value,
           radius : radius_value,
-          timestamp : timestamp_value,
           latitude : latitude_value,
           longitude : longitude_value
       };
@@ -547,7 +526,7 @@ router.post("/beacon", function(req,res)
  * @apiGroup Route
  * @apiVersion 1.0.1
  * @apiDescription Delete beacon
- * @apiSampleRequest https://sumo.kyroslbs.com/kyrosapi/beacon
+ * @apiSampleRequest https://api.kyroslbs.com/kyrosapi/beacon
  *
  * @apiParam {Number} id Beacon unique ID
  *
@@ -566,7 +545,6 @@ router.post("/beacon", function(req,res)
  *             "description": "Salida",
  *             "posBeacon": 1,
  *             "radius": 100,
- *             "timestamp": 2015-11-04T23:59:59Z,
  *             "latitude": 40.264348933803326,
  *             "longitude": -3.3876192569732666
  *          }
@@ -576,7 +554,6 @@ router.post("/beacon", function(req,res)
  *     }
  *
  * @apiUse TokenHeader
- * @apiUse LoginError
  * @apiUse TokenError
  * @apiUse TokenExpiredError
  * @apiUse MissingParameterError

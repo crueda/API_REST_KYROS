@@ -59,7 +59,7 @@ beaconModel.getBeacons = function(startRow, endRow, sortBy, callback)
     {
       if(row)
       {
-        var consulta = "SELECT ID as id, ROUTE_ID as routeId, DATE_FORMAT(FROM_UNIXTIME(FLOOR(DATE_BEACON/1000)), '%Y-%m-%dT%TZ') as timestamp, DESCRIPTION as description, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON";
+        var consulta = "SELECT ID as id, ROUTE_ID as routeId, DESCRIPTION as description, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON";
 
         var totalRows = row[0].nrows;
 
@@ -74,7 +74,7 @@ beaconModel.getBeacons = function(startRow, endRow, sortBy, callback)
           for (var i=0; i<vsortBy.length; i++ ) {
             if (vsortBy[i].charAt(0) == '-') {
               var element = vsortBy[i].substring(1, vsortBy[i].length);
-              if (element == 'id' || element == 'routeId' || element == 'posBeacon' || element == 'timestamp' || element == 'longitude' || element == 'latitude' || element == 'radius')
+              if (element == 'id' || element == 'routeId' || element == 'posBeacon' || element == 'longitude' || element == 'latitude' || element == 'radius')
               {
                 if (orderBy == '')
                   orderBy = element + ' desc';
@@ -83,7 +83,7 @@ beaconModel.getBeacons = function(startRow, endRow, sortBy, callback)
               }
             } else {
               var element = vsortBy[i];
-              if (element == 'id' || element == 'routeId' || element == 'posBeacon' || element == 'timestamp' || element == 'longitude' || element == 'latitude' || element == 'radius')
+              if (element == 'id' || element == 'routeId' || element == 'posBeacon' || element == 'longitude' || element == 'latitude' || element == 'radius')
               {
                 if (orderBy == '')
                   orderBy = element;
@@ -135,7 +135,7 @@ beaconModel.getBeacon = function(id,callback)
 {
     if (connection)
     {
-        var sql = "SELECT ID as id, DESCRIPTION as description, DATE_FORMAT(FROM_UNIXTIME(FLOOR(DATE_BEACON/1000)), '%Y-%m-%dT%TZ') as timestamp, ROUTE_ID as routeId, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON WHERE ID = " + connection.escape(id);
+        var sql = "SELECT ID as id, DESCRIPTION as description, ROUTE_ID as routeId, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON WHERE ID = " + connection.escape(id);
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, row)
         {
@@ -170,7 +170,6 @@ beaconModel.updateBeacon = function(beaconData, callback)
         "ROUTE_ID = " + connection.escape(beaconData.areaId) + "," +
         "POS_BEACON = " + connection.escape(beaconData.posBeacon) + "," +
         "RADIUS = " + connection.escape(beaconData.radius) + "," +
-        "DATE_BEACON = DATE_FORMAT(" + connection.escape(beaconData.timestamp) + ", '%Y-%m-%dT%TZ') ," +
         "POS_LATITUDE_DEGREE = " + latdeg + "," +
         "POS_LATITUDE_MIN = " + latmin + "," +
         "POS_LONGITUDE_DEGREE = " + londeg + "," +
@@ -210,9 +209,8 @@ beaconModel.insertBeacon = function(beaconData,callback)
     if (connection)
     {
         var sql = "INSERT INTO BEACON SET DESCRIPTION = " + connection.escape(beaconData.description) + "," +
-        "ROUTE_ID = " + connection.escape(beaconData.areaId) + "," +
+        "ROUTE_ID = " + connection.escape(beaconData.routeId) + "," +
         "POS_BEACON = " + connection.escape(beaconData.posBeacon) + "," +
-        "DATE_BEACON = DATE_FORMAT(" + connection.escape(beaconData.timestamp) + ", '%Y-%m-%dT%TZ') ," +
         "RADIUS = " + connection.escape(beaconData.radius) + "," +
         "POS_LATITUDE_DEGREE = " + latdeg + "," +
         "POS_LATITUDE_MIN = " + latmin + "," +
@@ -244,7 +242,7 @@ beaconModel.deleteBeacon = function(id, callback)
 {
     if(connection)
     {
-        var sqlExists = "SELECT ID as id, DESCRIPTION as description, DATE_FORMAT(FROM_UNIXTIME(FLOOR(DATE_BEACON/1000)), '%Y-%m-%dT%TZ') as timestamp, ROUTE_ID as routeId, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON WHERE id = " + connection.escape(id);
+        var sqlExists = "SELECT ID as id, DESCRIPTION as description, ROUTE_ID as routeId, POS_BEACON as posBeacon, RADIUS as radius, (POS_LATITUDE_DEGREE + POS_LATITUDE_MIN/60) as latitude, (POS_LONGITUDE_DEGREE + POS_LONGITUDE_MIN/60) as longitude FROM BEACON WHERE id = " + connection.escape(id);
         log.debug ("Query: "+sqlExists);
         connection.query(sqlExists, function(err, row) {
             //si existe la id del beacon a eliminar
