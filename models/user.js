@@ -42,7 +42,7 @@ userModel.getUsers = function(startRow, endRow, sortBy, callback)
       {
         if(row)
         {
-          var consulta = "SELECT USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as packages FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID group by USER_GUI.USERNAME";
+          var consulta = "SELECT USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as packages FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID group by USER_GUI.USERNAME";
           var totalRows = row[0].nrows;
 
           var sql = '';
@@ -116,7 +116,7 @@ userModel.getUser = function(id,callback)
 {
     if (connection)
     {
-        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.ID = " + connection.escape(id) + " group by USER_GUI.ID";
+        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.ID = " + connection.escape(id) + " group by USER_GUI.ID";
 
         log.debug ("Query: "+sql);
         connection.query(sql, function(error, row)
@@ -143,10 +143,10 @@ userModel.getUserFromUsername = function(username,callback)
     if (connection)
     {
         // sin consultar funcionalidades
-        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " group by USER_GUI.USERNAME";
+        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " group by USER_GUI.USERNAME";
 
         //con funcionalidades
-        //var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role, GROUP_CONCAT(distinct f2.SUMO_ENUM) as serviceList FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID, USER_FUNCTIONALITY uf2 right join FUNCTIONALITY f2 on uf2.FUNCTIONALITY_ID=f2.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " and uf2.USER_NAME= " + connection.escape(username) + " group by USER_GUI.USERNAME";
+        //var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as role, GROUP_CONCAT(distinct f2.SUMO_ENUM) as serviceList FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID, USER_FUNCTIONALITY uf2 right join FUNCTIONALITY f2 on uf2.FUNCTIONALITY_ID=f2.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " and uf2.USER_NAME= " + connection.escape(username) + " group by USER_GUI.USERNAME";
         log.debug ("Query:" + sql);
         connection.query(sql, function(error, row)
         {
@@ -174,10 +174,11 @@ userModel.getUserWithServicesFromUsername = function(username,callback)
     if (connection)
     {
         // sin consultar funcionalidades
-        //var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " group by USER_GUI.USERNAME";
+        //var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as role FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " group by USER_GUI.USERNAME";
 
         //con funcionalidades
-        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD as password, PACKAGES.DESCRIPTION as role, GROUP_CONCAT(distinct f2.SUMO_ENUM) as serviceList FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID, USER_FUNCTIONALITY uf2 right join FUNCTIONALITY f2 on uf2.FUNCTIONALITY_ID=f2.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " and uf2.USER_NAME= " + connection.escape(username) + " group by USER_GUI.USERNAME";
+        var sql = "SELECT USER_GUI.ID as id, USERNAME as username, PASSWORD_MD5 as password, PACKAGES.DESCRIPTION as role, GROUP_CONCAT(distinct f2.SUMO_ENUM) as serviceList FROM USER_GUI inner join USER_FUNCTIONALITY on USER_GUI.USERNAME=USER_FUNCTIONALITY.USER_NAME, USER_FUNCTIONALITY uf inner join PACKAGES on uf.PACKAGES_ID=PACKAGES.ID, USER_FUNCTIONALITY uf2 right join FUNCTIONALITY f2 on uf2.FUNCTIONALITY_ID=f2.ID WHERE USER_GUI.USERNAME = " + connection.escape(username) + " and uf2.USER_NAME= " + connection.escape(username) + " group by USER_GUI.USERNAME";
+
         log.debug ("Query:" + sql);
         connection.query(sql, function(error, row)
         {
